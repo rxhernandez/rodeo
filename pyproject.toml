@@ -1,0 +1,104 @@
+# Copyright 2022 Johannes Reiff
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+build-backend = 'setuptools.build_meta'
+requires = [
+    'setuptools >=65.0',
+    'setuptools-scm >=6.4',
+]
+
+
+[project]
+name = 'rodeo'
+authors = [{name = 'Johannes Reiff', email = 'mail@jreiff.de'}]
+description = 'A library showcasing transition-state theory algorithms.'
+readme = 'README.rst'
+urls = {Homepage = 'https://github.com/joreiff/rodeo'}
+requires-python = '>=3.10'
+license = {text = 'Apache-2.0'}
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: Apache Software License',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3 :: Only',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Chemistry',
+    'Topic :: Scientific/Engineering :: Mathematics',
+    'Topic :: Scientific/Engineering :: Physics',
+]
+dependencies = [
+    'numpy >=1.22,<2',
+    'scipy >=1.8,<2',
+]
+dynamic = ['version']
+
+[project.optional-dependencies]
+dev = [
+    'pylint >=2.15',
+    'pytest >=7.0',
+    'sphinx >=5.0,<6',
+    'sphinx-rtd-theme >=1.0,<2',
+]
+
+
+[tool.setuptools]
+license-files = ['LICENSE', 'NOTICE']
+zip-safe = true
+
+
+[tool.setuptools_scm]
+write_to = 'src/rodeo/_version.py'
+write_to_template = '''
+# Copyright 2022 Johannes Reiff
+# SPDX-License-Identifier: Apache-2.0
+# pylint: disable=unexpected-line-ending-format
+
+VERSION = '{version}'
+'''
+
+
+[tool.pylint.master]
+jobs = 0
+ignore = [
+    '.git',
+]
+
+[tool.pylint.'messages control']
+disable = [
+    'missing-docstring',
+    'no-else-raise',
+    'no-else-return',
+    'too-few-public-methods',
+]
+
+[tool.pylint.basic]
+argument-rgx = '[a-z_][a-z0-9_]{,30}$'
+variable-rgx = '[a-z_][a-z0-9_]{,30}$'
+attr-rgx = '[a-z_][a-z0-9_]{,30}$'
+
+[tool.pylint.design]
+max-args = 8
+
+[tool.pylint.format]
+expected-line-ending-format = 'LF'
+
+[tool.pylint.logging]
+logging-format-style = 'new'
+
+
+[tool.pytest.ini_options]
+testpaths = ['test']
+addopts = [
+    '--last-failed',
+    '--import-mode=importlib',
+    '--strict-markers',
+]
+markers = [
+    "slow: marks tests as slow (skip with '-m \"not slow\"' or '--skip-slow')",
+]

@@ -1,0 +1,5 @@
+# Copyright 2022 Johannes Reiff
+# SPDX-License-Identifier: Apache-2.0
+
+*      text=auto eol=lf
+*.py   text      eol=lf   diff=python
