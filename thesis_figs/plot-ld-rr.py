@@ -1,25 +1,24 @@
 #!/usr/bin/env python3
 
-import pathlib
+import pickle
 import sys
 
 import numpy as np
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'lib'))
-import plot
+import plotlib as plot
 
 
-LD_CUT_STYLE = dict(color='jr:gray', lw=1)
-RR_CUT_STYLE = dict(color='jr:dark_gray', lw=1)
-CIRCLE_BG = dict(bbox={'boxstyle': 'circle', 'facecolor': 'jr:white', 'fill': True})
+LD_CUT_STYLE = dict(color='darkgray', lw=1)
+RR_CUT_STYLE = dict(color='gray', lw=1)
+CIRCLE_BG = dict(bbox={'boxstyle': 'circle', 'facecolor': 'white', 'fill': True})
 
 CUT_X = -0.8
 
 RR_LABELS = (
-    ('center', -0.5, 'center'  ,  0.0, r'\num{1}', CIRCLE_BG),
-    ('center', +0.5, 'center'  ,  0.0, r'\num{2}', CIRCLE_BG),
-    ('center',  0.0, 'center'  , +0.5, r'\num{3}', CIRCLE_BG),
-    ('center',  0.0, 'center'  , -0.5, r'\num{4}', CIRCLE_BG),
+    ('center', -0.5, 'center'  ,  0.0, '1', CIRCLE_BG),
+    ('center', +0.5, 'center'  ,  0.0, '2', CIRCLE_BG),
+    ('center',  0.0, 'center'  , +0.5, '3', CIRCLE_BG),
+    ('center',  0.0, 'center'  , -0.5, '4', CIRCLE_BG),
 )
 
 
@@ -27,7 +26,7 @@ def main():
     ld_data, rr_data = load_data()
 
     fig, axes = plot.newfig(aspect=4 / 3, nrows=2, ncols=2, height_ratios=(2, 1),
-        left=47, right=9, top=44, bottom=34, wspace=53, hspace=36)
+        left=47, right=9, top=44, bottom=30, wspace=53, hspace=36)
 
     for ax in axes[0]:
         ax.set_xlabel('$x$')
@@ -44,12 +43,14 @@ def main():
     plot_ld(*axes.T[0], ld_data)
     plot_rr(*axes.T[1], rr_data)
 
-    plot.save_figure(fig)
+    plot.save_figure(fig, 'ld-rr.pdf')
 
 
 def load_data():
-    yield plot.load_data('dwell/ld')
-    yield plot.load_data('dwell/rr')
+    with open('ld.pickle', 'rb') as fp:
+        yield pickle.load(fp)
+    with open('rr.pickle', 'rb') as fp:
+        yield pickle.load(fp)
     plot.log('Data loaded')
 
 
@@ -64,9 +65,9 @@ def plot_ld(main_ax, cut_ax, data):
     cbar, _ = plot.cbar_above(fig, [main_ax, main_ax], aximg,
         dy=h_bp(fig, 6), extend='max')
     plot.cbar_minmax_labels(cbar, ['min', 'max'])
-    cbar.set_label(r'$\LD$', labelpad=-4)
+    cbar.set_label(r'$\mathcal{L}$', labelpad=-4)
 
-    cut_ax.set_ylabel(r'$\LD$', labelpad=14)
+    cut_ax.set_ylabel(r'$\mathcal{L}$', labelpad=14)
     cut_ax.plot(data['p'], cut_ld)
 
 

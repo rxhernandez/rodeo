@@ -2,21 +2,19 @@
 
 import functools
 import multiprocessing
-import pathlib
+import pickle
 import sys
 
 import numpy as np
 import tqdm
 
-sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'lib'))
-import data
 import rodeo
 
 
 TIME = 0.0
 TIME_STEP = 1e-3
-X_VALS = np.linspace(-1.0, +1.0, 2048)
-P_VALS = np.linspace(-1.0, +1.0, 2048)
+X_VALS = np.linspace(-1.0, +1.0, 1024)
+P_VALS = np.linspace(-1.0, +1.0, 1024)
 
 
 class DoubleWell(rodeo.System):
@@ -28,14 +26,15 @@ def main():
     propagator = rodeo.Propagator(DoubleWell(), rodeo.RungeKutta4, TIME_STEP)
     rr = raster_rr(X_VALS, P_VALS, TIME, propagator)
 
-    data.save('generic/dwell/rr', {
-        'system': 'V = x⁴/4 - x²/2',
-        'dt': TIME_STEP,
-        'x': X_VALS,
-        'p': P_VALS,
-        'rr': np.choose(rr, [0, 2, 3, 1]),
-        'format': '[x][p]',
-    })
+    with open('ld.pickle', 'wb') as fp:
+        pickle.dump({
+            'system': 'V = x⁴/4 - x²/2',
+            'dt': TIME_STEP,
+            'x': X_VALS,
+            'p': P_VALS,
+            'rr': np.choose(rr, [0, 2, 3, 1]),
+            'format': '[x][p]',
+        }, fp)
 
 
 def raster_rr(x_vals, p_vals, t, propagator):
