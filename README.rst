@@ -10,6 +10,7 @@ RODEO
 This is a working mirror of RODEO (*Reaction Dynamics and Exceptional Orbits*),
 a Python library showcasing transition-state theory algorithms.
 It's public working version can be found at https://github.com/joreiff/rodeo
+
 For information on how to install or use this project,
 please refer to the `documentation <doc/>`_.
 
